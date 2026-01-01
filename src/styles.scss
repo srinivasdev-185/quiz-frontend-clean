@@ -1,0 +1,78 @@
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((color: (primary: mat.$cyan-palette,
+        tertiary: mat.$orange-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    ));
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+}
+
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// Theme Variables
+:root {
+  // Light Mode (Default) - Based on uploaded image
+  --app-bg: #FAF9F6; // Soft Ivory
+  --card-bg: #FFFFFF; // Pure White
+  --text-primary: #2F2F2F; // Charcoal
+  --text-secondary: #6F6F6F; // Muted Gray
+  --divider: #E6E4E1; // Warm Gray
+  --primary-accent: #4A7FB5; // Faith Blue
+  --highlight: #E7F0FA; // Light Sky
+  --correct: #E8B97E; // Warm Honey
+  --error: #E2A3A3; // Soft Rose
+  --button-text: #FFFFFF;
+}
+
+.dark-theme {
+  // Dark Mode - Based on previous requests
+  --app-bg: #121416; // Deep Charcoal
+  --card-bg: #1C1F24; // Soft Dark Gray
+  --text-primary: #F1F1F1; // Soft White
+  --text-secondary: #B5B5B5; // Ray
+  --divider: #2A2E34; // Dark Border
+  --primary-accent: #CFA56C; // Soft Gold (Replacing Blue for Dark Mode)
+  --highlight: #2A2E34; // Dark Neutral
+  --correct: #CFA56C; // Soft Gold
+  --error: #B97A7A; // Muted Rose
+  --button-text: #121416;
+}
+
+html,
+body {
+  height: 100%;
+  background-color: var(--app-bg);
+  color: var(--text-primary);
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

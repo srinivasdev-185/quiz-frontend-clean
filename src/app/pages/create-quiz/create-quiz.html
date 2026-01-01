@@ -1,0 +1,112 @@
+<div class="min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+
+      <div class="flex items-center gap-4">
+        <div class="h-12 w-12 bg-indigo-50 rounded-2xl flex items-center justify-center shadow-inner">
+          <mat-icon class="text-indigo-600">edit_note</mat-icon>
+        </div>
+        <div>
+          <h1 class="text-2xl font-black text-gray-900 leading-tight tracking-tight">
+            {{ isAttemptMode ? 'Attempt' : 'Create' }} <span class="text-indigo-600">Quiz</span>
+          </h1>
+          <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mt-0.5">Questionnaire Editor</p>
+        </div>
+      </div>
+
+      <button 
+        class="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-900 text-white text-sm font-bold hover:bg-gray-800 transition-all duration-300 active:scale-95 shadow-lg shadow-gray-200"
+        (click)="submitQuiz()">
+        <mat-icon class="text-base scale-75">save</mat-icon>
+        <span>{{ isAttemptMode ? 'Submit' : 'Save Final' }}</span>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- Content -->
+  <main class="max-w-4xl mx-auto px-4 py-10">
+
+    <!-- Question -->
+    <div class="question-card p-8 mb-8">
+      <label class="block text-sm text-center text-gray-500 mb-4">
+        Question {{ currentIndex + 1 }} / {{ questions.length }}
+      </label>
+
+      <input
+        [(ngModel)]="questionText"
+        [disabled]="isAttemptMode"
+        class="w-full text-center text-3xl font-bold bg-transparent outline-none"
+        placeholder="Enter question">
+    </div>
+
+    <!-- Options -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-10">
+
+      <div *ngFor="let num of [1,2,3,4]; let i = index" class="relative">
+
+        <div
+          class="option-card"
+          [class.option-selected]="selectedOption === num"
+          (click)="selectOption(num)">
+
+          <mat-radio-button
+            [checked]="selectedOption === num"
+            class="pointer-events-none">
+          </mat-radio-button>
+
+          <span class="option-letter">{{ ['A','B','C','D'][i] }}</span>
+
+          <input
+            [(ngModel)]="options[i]"
+            [disabled]="isAttemptMode"
+            class="option-input"
+            placeholder="Enter option">
+
+        </div>
+
+        <span *ngIf="selectedOption === num" class="option-badge" @fadeIn>
+          Selected
+        </span>
+
+      </div>
+
+    </div>
+
+    <!-- Navigation -->
+    <div class="flex justify-between items-center pt-10 border-t border-gray-100">
+
+      <button
+        class="flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-gray-100 text-gray-600 text-sm font-bold hover:bg-gray-50 hover:border-gray-300 hover:text-gray-900 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed group active:scale-95"
+        [disabled]="!hasPrev()"
+        (click)="prevQuestion()">
+        <div class="p-1 bg-gray-100 rounded-lg group-hover:bg-gray-200 transition-colors">
+          <mat-icon class="text-xs scale-90 group-hover:-translate-x-0.5 transition-transform">arrow_back</mat-icon>
+        </div>
+        <span>Previous</span>
+      </button>
+
+      <div class="hidden sm:flex items-center gap-2">
+        @for (dot of questions; track $index) {
+          <div 
+            [class]="currentIndex === $index ? 'w-8 bg-indigo-600' : 'w-2 bg-gray-200'"
+            class="h-2 rounded-full transition-all duration-500">
+          </div>
+        }
+      </div>
+
+      <button 
+        class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-sm font-bold shadow-xl shadow-indigo-100 hover:bg-indigo-700 hover:-translate-y-0.5 transition-all duration-300 group active:scale-95"
+        (click)="nextQuestion()">
+        <span>{{ currentIndex === questions.length - 1 ? 'Finish' : 'Next' }}</span>
+        <div class="p-1 bg-white/20 rounded-lg group-hover:bg-white/30 transition-colors">
+          <mat-icon class="text-xs scale-90 group-hover:translate-x-0.5 transition-transform">arrow_forward</mat-icon>
+        </div>
+      </button>
+
+    </div>
+
+  </main>
+</div>

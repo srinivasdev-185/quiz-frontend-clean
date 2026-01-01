@@ -1,0 +1,42 @@
+/* nav links */
+.nav-link {
+  @apply text-charcoal hover:text-faith transition cursor-pointer;
+}
+
+/* mobile smooth feel */
+nav {
+  @apply sticky top-0 z-50;
+}
+
+/* material menu */
+.faith-menu {
+  .mat-mdc-menu-content {
+    @apply bg-white rounded-xl shadow-lg border border-divider;
+  }
+
+  .mat-mdc-menu-item {
+    @apply text-charcoal hover:bg-ivory;
+  }
+}
+
+/* Dialog Styling */
+.faith-dialog {
+  label {
+    @apply transition-colors duration-200 block mb-1;
+  }
+
+  /* Highlight label when the input inside focuses */
+  .flex:focus-within label {
+    @apply text-indigo-600 font-bold;
+  }
+}
+
+/* Adjust Material Form Field density for compact look when labels are outside */
+.mat-mdc-form-field {
+  @apply mb-0;
+
+  /* Remove top padding since label is outside */
+  .mat-mdc-text-field-wrapper {
+    @apply pt-0;
+  }
+}

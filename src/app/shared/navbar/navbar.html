@@ -1,0 +1,152 @@
+<nav class="bg-ivory border-b border-divider">
+  <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+
+    <!-- Left: Logo -->
+    <div class="flex items-center">
+      <img src="assets/Logo_wBG-removebg-preview.png" alt="Quiz Logo" class="h-16 w-auto object-contain" />
+    </div>
+
+    <!-- Desktop Links -->
+    <div class="hidden md:flex items-center gap-10 text-lg font-medium text-charcoal">
+      <a routerLink="/dashboard" class="nav-link">Dashboard</a>
+      @if(user.role === 'Admin' || user.role === 'SuperAdmin'){
+      <button (click)="createQuiz()" class="nav-link">
+        Create Quiz
+      </button>
+      }
+      <a routerLink="/userStatastics" class="nav-link cursor-pointer">User Statistics</a>
+    </div>
+
+    <!-- Right: User Menu (Desktop) -->
+    <div class="hidden md:flex items-center">
+      <button
+        mat-button
+        [mat-menu-trigger-for]="menu"
+        class="flex items-center gap-2">
+
+        <mat-icon class="text-2xl text-faith">account_circle</mat-icon>
+        <span>{{ user.email }}</span>
+        <mat-icon class="text-faith">
+          {{ up ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}
+        </mat-icon>
+      </button>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button
+      class="md:hidden text-faith"
+      (click)="mobileOpen = !mobileOpen">
+      <mat-icon class="text-3xl">
+        {{ mobileOpen ? 'close' : 'menu' }}
+      </mat-icon>
+    </button>
+  </div>
+
+  <!-- Mobile Menu -->
+   @if(mobileOpen) {
+  <div class="md:hidden bg-white border-t border-divider">
+    <div class="flex flex-col px-6 py-4 gap-4 text-lg font-medium text-charcoal">
+
+      <a
+        routerLink="/dashboard"
+        (click)="mobileOpen=false"
+        class="nav-link">
+        Dashboard
+      </a>
+       @if(user.role === 'Admin' || user.role === 'SuperAdmin'){
+      <button
+        (click)="createQuiz(); mobileOpen=false"
+        class="nav-link text-left">
+        Create Quiz
+      </button>
+      }
+
+      <a routerLink="/userStatastics" (click)="mobileOpen=false" class="nav-link cursor-pointer">User Statistics</a>
+
+      <!-- User Section -->
+      <button
+        mat-button
+        [mat-menu-trigger-for]="menu"
+        class="flex items-center gap-2 justify-start">
+
+        <mat-icon class="text-faith">account_circle</mat-icon>
+        <span>{{ user.email }}</span>
+      </button>
+    </div>
+  </div>
+}
+</nav>
+
+<mat-menu
+  #menu="matMenu"
+  class="faith-menu"
+  (closed)="up=false"
+  (opened)="up=true">
+
+  <button mat-menu-item>
+    <mat-icon>person</mat-icon>
+    Profile
+  </button>
+
+  <button mat-menu-item (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    Logout
+  </button>
+
+</mat-menu>
+<ng-template #creteQuiz>
+  <div class="flex items-center justify-between p-6 pb-2">
+    <h2 class="text-2xl font-extrabold text-indigo-600 m-0">
+      Create New Quiz
+    </h2>
+    <button (click)="closeDialog()" class="p-2 hover:bg-gray-100 rounded-full transition-colors group">
+      <mat-icon class="text-gray-400 group-hover:text-red-500 transition-colors">close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content class="faith-dialog pt-2">
+
+    <form [formGroup]="createQuizForm" class="space-y-4">
+
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-bold text-gray-700 tracking-wide uppercase px-1">Chapter Name</label>
+        <mat-form-field appearance="outline" class="w-full">
+          <input matInput formControlName="chapterName" placeholder="Enter chapter name" />
+          @if (chapterName?.hasError('required')) {
+            <mat-error>Chapter name is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-bold text-gray-700 tracking-wide uppercase px-1">Topic Name</label>
+        <mat-form-field appearance="outline" class="w-full">
+          <input matInput formControlName="topicName" placeholder="Enter topic name" />
+          @if (topicName?.hasError('required')) {
+            <mat-error>Topic name is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="flex flex-col gap-1.5">
+        <label class="text-sm font-bold text-gray-700 tracking-wide uppercase px-1">Quiz Name</label>
+        <mat-form-field appearance="outline" class="w-full">
+          <input matInput formControlName="quizName" placeholder="Enter quiz name" />
+          @if (quizName?.hasError('required')) {
+            <mat-error>Quiz name is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+    </form>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="px-6 pb-8">
+    <button
+      [disabled]="createQuizForm.invalid"
+      (click)="navigateToQuiz()"
+      class="w-full md:w-48 py-3.5 bg-indigo-600 text-white font-bold rounded-2xl shadow-xl hover:shadow-indigo-200 hover:bg-indigo-700 hover:-translate-y-0.5 transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:shadow-none flex items-center justify-center gap-2 group"
+    >
+      <span class="tracking-wide">Create Quiz</span>
+      <mat-icon class="text-white group-hover:translate-x-1 transition-transform">arrow_forward</mat-icon>
+    </button>
+  </mat-dialog-actions>
+</ng-template>

@@ -1,0 +1,55 @@
+<div class="p-6 max-w-6xl mx-auto">
+
+  <h1 class="text-3xl font-extrabold text-indigo-600 mb-8">
+    User Statistics
+  </h1>
+
+  <!-- Stats Grid -->
+  @if (quizes().length > 0) {
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      @for (quiz of quizes(); track quiz._id) {
+        <div class="group bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-2xl p-6 border border-indigo-50 transition-all duration-300 hover:-translate-y-1">
+          <div class="flex flex-col gap-4">
+            <div class="flex items-center gap-3">
+              <div class="p-3 bg-indigo-100 rounded-xl group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h2 class="text-xl font-bold text-gray-800 tracking-tight">
+                {{ quiz.quiz.quizName }} : <span class="text-indigo-600">{{ quiz.score }}</span>
+              </h2>
+            </div>
+
+            <div class="h-px bg-gradient-to-r from-indigo-100 to-transparent"></div>
+
+            <div class="flex items-end justify-between">
+              <div>
+                <p class="text-xs font-semibold text-indigo-400 uppercase tracking-wider mb-1">Performance Details</p>
+                <div class="flex items-baseline gap-1">
+                  <span class="text-2xl font-bold text-gray-900 leading-none">Scored {{ quiz.score }} points</span>
+                </div>
+              </div>
+              
+              <div class="flex items-center gap-2 px-3 py-1 bg-green-50 text-green-600 rounded-full text-sm font-semibold">
+                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                Completed
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="flex flex-col items-center justify-center p-12 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200 mt-10">
+      <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <p class="text-xl font-medium text-gray-500">No quiz attempts found yet.</p>
+      <p class="text-sm text-gray-400 mt-1">When you complete quizzes, your statistics will appear here.</p>
+    </div>
+  }
+
+</div>

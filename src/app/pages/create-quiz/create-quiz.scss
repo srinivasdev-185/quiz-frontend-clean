@@ -1,0 +1,184 @@
+// Core variables (matching login theme)
+$primary-blue: #2563EB;
+$primary-dark: #1E40AF;
+$bg-color: #F8FAFC;
+$card-bg: #FFFFFF;
+$text-main: #1F2937;
+$text-secondary: #6B7280;
+$border-color: #E5E7EB;
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: $bg-color;
+  font-family: 'Inter', sans-serif;
+}
+
+// Layout adjustments
+header {
+  background-color: $card-bg !important;
+  border-bottom: 1px solid $border-color;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(8px);
+  background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+// Typography
+h1 {
+  color: $text-main;
+  letter-spacing: -0.025em;
+}
+
+// Buttons
+.btn-primary {
+  background-color: $primary-blue;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.1), 0 2px 4px -1px rgba(37, 99, 235, 0.06);
+  transition: all 0.2s ease;
+  border: none;
+
+  &:hover {
+    background-color: $primary-dark;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.btn-secondary {
+  background-color: white;
+  border: 1px solid $border-color;
+  color: $text-main;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: #F3F4F6;
+    border-color: #D1D5DB;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #F3F4F6;
+  }
+}
+
+// Question Input Area
+.question-card {
+  background: $card-bg;
+  border-radius: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); // Smooth subtle shadow
+  border: 1px solid $border-color;
+  transition: all 0.3s ease;
+
+  &:focus-within {
+    border-color: #93C5FD; // blue-300
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.1), 0 2px 4px -1px rgba(37, 99, 235, 0.06);
+  }
+
+  input {
+    transition: all 0.2s;
+
+    &::placeholder {
+      color: #9CA3AF;
+    }
+  }
+}
+
+// Options Grid
+.option-card {
+  background-color: $card-bg;
+  border: 2px solid transparent; // Reserve space for border to prevent layout shift
+  border-color: $border-color;
+  border-radius: 1rem;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  &:hover {
+    border-color: #93C5FD; // blue-300
+    background-color: #EFF6FF; // blue-50
+    transform: translateY(-2px);
+  }
+}
+
+.option-selected {
+  border-color: $primary-blue !important;
+  background-color: #EFF6FF !important; // blue-50
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.1);
+
+  .option-letter {
+    color: $primary-blue;
+  }
+}
+
+.option-letter {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: $text-secondary;
+  width: 2rem;
+  text-align: center;
+}
+
+.option-badge {
+  position: absolute;
+  top: -0.75rem;
+  left: 1.5rem;
+  background-color: $primary-blue;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+  z-index: 10;
+}
+
+// Input inside option
+.option-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  color: $text-main;
+  font-weight: 500;
+
+  &::placeholder {
+    color: #9CA3AF;
+    font-weight: normal;
+  }
+}
+
+// Animations
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+main {
+  animation: slideInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}

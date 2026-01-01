@@ -1,0 +1,75 @@
+// Dashboard Styles - Theme Aware (Uses CSS Variables)
+
+// Animations removed per request
+
+// Professional Card
+.pro-card {
+    background: var(--card-bg);
+    border: 1px solid var(--divider);
+    color: var(--text-primary);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+        border-color: var(--primary-accent);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transform: translateY(-2px);
+    }
+}
+
+// Quiz Item interactive state
+.quiz-item-row {
+    background-color: transparent;
+    border-color: var(--divider);
+    transition: all 0.2s ease;
+
+    &:hover {
+        background-color: var(--highlight);
+        border-color: var(--primary-accent);
+    }
+}
+
+// Custom Scrollbar
+.custom-scrollbar {
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: var(--divider);
+        border-radius: 4px;
+
+        &:hover {
+            background: var(--text-secondary);
+        }
+    }
+}
+
+.admin-badge {
+    @apply px-2 py-0.5 rounded text-xs font-medium;
+}
+
+// Utilities
+.text-primary {
+    color: var(--text-primary) !important;
+}
+
+.text-secondary {
+    color: var(--text-secondary) !important;
+}
+
+.text-accent {
+    color: var(--primary-accent) !important;
+}
+
+.bg-accent {
+    background-color: var(--primary-accent) !important;
+}
+
+.border-divider {
+    border-color: var(--divider) !important;
+}

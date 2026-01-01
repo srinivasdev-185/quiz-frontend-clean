@@ -1,0 +1,275 @@
+<div class="h-full font-sans overflow-y-auto custom-scrollbar bg-app-bg text-primary-text">
+    
+    <!-- Page Header -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        <h1 class="text-2xl font-bold tracking-tight text-primary-text">Dashboard</h1>
+        <div class="flex items-center gap-2 text-sm mt-1 text-secondary-text">
+            <span class="hover:text-primary-text cursor-pointer transition-colors" (click)="goBackToChapters()">Courses</span>
+            @if(selectedChapter) {
+                <mat-icon style="font-size: 14px; width: 14px; height: 14px;">chevron_right</mat-icon>
+                <span [class.font-semibold]="!selectedTopic" class="cursor-pointer hover:text-primary-text transition-colors" 
+                      [class.text-primary-accent]="!selectedTopic"
+                      [class.text-secondary-text]="selectedTopic"
+                      (click)="goBackToTopics()">{{selectedChapter.chapterName}}</span>
+            }
+            @if(selectedTopic) {
+                <mat-icon style="font-size: 14px; width: 14px; height: 14px;">chevron_right</mat-icon>
+                <span class="font-semibold text-primary-accent">{{selectedTopic.topicName}}</span>
+            }
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <div class="grid grid-cols-1 gap-8" [ngClass]="user?.role === 'SuperAdmin' ? 'lg:grid-cols-3' : 'lg:grid-cols-1'">
+            
+            <!-- LEFT COLUMN: Main Quiz Content -->
+            <main class="space-y-8" [ngClass]="user?.role === 'SuperAdmin' ? 'lg:col-span-2' : 'lg:col-span-1'">
+                
+                @if(loadingService.loading()) {
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="h-7 w-32 bg-divider/50 rounded animate-pulse"></div>
+                        <div class="flex gap-4">
+                            <div class="h-4 w-20 bg-divider/50 rounded animate-pulse self-center"></div>
+                            <div class="h-9 w-32 bg-divider/30 rounded-lg animate-pulse"></div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        @for(i of [1,2,3,4]; track i) {
+                            <div class="pro-card rounded-xl p-6 bg-card-bg border border-divider">
+                                <div class="flex items-start justify-between mb-4">
+                                    <div class="w-10 h-10 rounded-lg bg-divider/50 animate-pulse"></div>
+                                    <div class="w-16 h-6 rounded-full bg-divider/50 animate-pulse"></div>
+                                </div>
+                                <div class="w-3/4 h-6 mb-3 rounded bg-divider/50 animate-pulse"></div>
+                                <div class="space-y-2">
+                                    <div class="w-full h-4 rounded bg-divider/30 animate-pulse"></div>
+                                    <div class="w-2/3 h-4 rounded bg-divider/30 animate-pulse"></div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                } @else if(quizesData.length > 0) {
+                    
+                    <!-- VIEW 1: CHAPTERS LIST (Root View) -->
+                    @if(!selectedChapter) {
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-lg font-semibold text-primary-text">All Courses</h2>
+                            <div class="flex items-center gap-4">
+                                <span class="text-sm text-secondary-text">{{quizesData.length}} Chapters</span>
+                                @if(user?.role === 'Admin' || user?.role === 'SuperAdmin') {
+                                    <button mat-flat-button (click)="onAddChapter()" class="!bg-primary-accent !text-button-text !rounded-lg !px-4 !py-1.5 flex items-center gap-2">
+                                        <mat-icon style="font-size: 18px; width: 18px; height: 18px;">add</mat-icon>
+                                        Add Chapter
+                                    </button>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            @for(chapter of quizesData; track chapter._id) {
+                                <div (click)="selectChapter(chapter)" class="pro-card rounded-xl p-6 cursor-pointer group transition-all duration-200 relative overflow-hidden bg-card-bg border border-divider hover:border-primary-accent/50 shadow-sm hover:shadow-md">
+                                    <!-- Decorative faint glow -->
+                                    <div class="absolute top-0 right-0 w-20 h-20 bg-primary-accent/5 rounded-full blur-xl -mr-10 -mt-10"></div>
+                                    
+                                    <div class="flex items-start justify-between mb-4 relative z-10">
+                                        <div class="p-3 rounded-lg transition-colors bg-primary-accent/10 text-primary-accent">
+                                            <mat-icon>menu_book</mat-icon>
+                                        </div>
+                                        <span class="text-xs font-medium px-2 py-1 rounded-full bg-divider/50 text-secondary-text">{{chapter.topics.length}} Topics</span>
+                                    </div>
+                                    <h3 class="text-lg font-bold mb-2 group-hover:text-primary-accent transition-colors text-primary-text">{{chapter.chapterName}}</h3>
+                                    <p class="text-sm line-clamp-2 text-secondary-text">Explore topics and quizzes within this chapter.</p>
+                                    <div class="mt-4 flex items-center text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity text-primary-accent">
+                                        View Topics <mat-icon class="ml-1" style="font-size: 16px; width: 16px; height: 16px;">arrow_forward</mat-icon>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    <!-- VIEW 2: TOPICS LIST (Inside a Chapter) -->
+                    @if(selectedChapter && !selectedTopic) {
+                        <div>
+                            <button (click)="goBackToChapters()" class="mb-6 flex items-center text-sm transition-colors hover:text-primary-text text-secondary-text">
+                                <mat-icon style="font-size: 18px; width: 18px; height: 18px;" class="mr-1">arrow_back</mat-icon>
+                                Back to Courses
+                            </button>
+
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center gap-3">
+                                    <div class="h-8 w-1 rounded-full bg-primary-accent"></div>
+                                    <h2 class="text-2xl font-bold text-primary-text">{{selectedChapter.chapterName}}</h2>
+                                </div>
+                                @if(user?.role === 'Admin' || user?.role === 'SuperAdmin') {
+                                    <button mat-flat-button (click)="onAddTopic()" class="!bg-primary-accent !text-button-text !rounded-lg !px-4 !py-1.5 flex items-center gap-2">
+                                        <mat-icon style="font-size: 18px; width: 18px; height: 18px;">add</mat-icon>
+                                        Add Topic
+                                    </button>
+                                }
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                @for(topic of selectedChapter.topics; track topic._id) {
+                                    <div (click)="selectTopic(topic)" class="pro-card rounded-lg p-5 cursor-pointer flex items-center justify-between group bg-card-bg border border-divider hover:border-primary-accent/30 shadow-sm">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold font-sans transition-transform group-hover:scale-110 bg-divider/30 text-primary-accent">
+                                                {{topic.topicName.charAt(0).toUpperCase()}}
+                                            </div>
+                                            <div>
+                                                <h4 class="font-semibold transition-colors group-hover:text-primary-accent text-primary-text">{{topic.topicName}}</h4>
+                                                <p class="text-xs text-secondary-text">{{topic.quizes.length}} Quizzes</p>
+                                            </div>
+                                        </div>
+                                        <mat-icon class="transition-colors group-hover:text-primary-accent text-divider">chevron_right</mat-icon>
+                                    </div>
+                                }
+                                @if(selectedChapter.topics.length === 0) {
+                                    <div class="col-span-2 py-10 text-center rounded-xl border border-dashed bg-card-bg text-secondary-text border-divider">
+                                        No topics found in this chapter.
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <!-- VIEW 3: QUIZZES LIST (Inside a Topic) -->
+                    @if(selectedTopic) {
+                        <div>
+
+                            <button (click)="goBackToTopics()" class="mb-6 flex items-center text-sm transition-colors hover:text-primary-text text-secondary-text">
+                                <mat-icon style="font-size: 18px; width: 18px; height: 18px;" class="mr-1">arrow_back</mat-icon>
+                                Back to {{selectedChapter.chapterName}}
+                            </button>
+
+                            <div class="pro-card rounded-xl overflow-hidden min-h-[400px] bg-card-bg border border-divider shadow-sm">
+                                <div class="px-6 py-8 border-b bg-highlight border-divider flex items-center justify-between">
+                                    <div>
+                                        <div class="flex items-center gap-2 mb-2 text-primary-accent">
+                                            <mat-icon style="font-size: 20px; width: 20px; height: 20px;">topic</mat-icon>
+                                            <span class="text-xs font-bold uppercase tracking-wider">Topic</span>
+                                        </div>
+                                        <h2 class="text-3xl font-extrabold text-primary-text">{{selectedTopic.topicName}}</h2>
+                                        <p class="mt-2 text-secondary-text">Select a quiz below to begin testing your knowledge.</p>
+                                    </div>
+                                    @if(user?.role === 'Admin' || user?.role === 'SuperAdmin') {
+                                        <button mat-flat-button (click)="onAddQuiz()" class="!bg-primary-accent !text-button-text !rounded-lg !px-4 !py-1.5 flex items-center gap-2">
+                                            <mat-icon style="font-size: 18px; width: 18px; height: 18px;">add</mat-icon>
+                                            Add Quiz
+                                        </button>
+                                    }
+                                </div>
+
+                                <div class="p-6">
+                                    <div class="flex flex-col gap-3">
+                                        @for(quiz of selectedTopic.quizes; track quiz._id) {
+                                            <div class="w-full text-left p-4 rounded-xl border transition-all duration-200 flex items-center justify-between group hover:shadow-lg bg-card-bg border-divider text-primary-text hover:border-primary-accent">
+                                                <div class="flex items-start gap-4">
+                                                    <div class="mt-1 w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm bg-primary-accent/10 text-primary-accent">
+                                                        {{$index + 1}}
+                                                    </div>
+                                                    <div>
+                                                        <h4 class="font-bold text-lg group-hover:text-primary-accent transition-colors">{{quiz.quizName}}</h4>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    <button (click)="createQuize(quiz._id)" mat-mini-fab color="primary" class="!bg-primary-accent !text-button-text !shadow-none" matTooltip="Attempt Quiz">
+                                                        <mat-icon>play_arrow</mat-icon>
+                                                    </button>
+                                                    @if(user?.role === 'Admin' || user?.role === 'SuperAdmin') {
+                                                        <button (click)="onEditQuiz(quiz._id)" mat-mini-fab class="!bg-highlight !text-primary-text !shadow-none hover:!bg-divider" matTooltip="Edit Quiz">
+                                                            <mat-icon>edit</mat-icon>
+                                                        </button>
+                                                    }
+                                                </div>
+                                            </div>
+                                        }
+                                        @if(selectedTopic.quizes.length === 0) {
+                                            <div class="py-12 text-center text-secondary-text">
+                                                <mat-icon class="scale-150 mb-2 opacity-50">assignment_late</mat-icon>
+                                                <p>No quizzes available yet for this topic.</p>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                } @else {
+                    <!-- Realistic Empty State -->
+                    <div class="text-center py-24 rounded-xl border border-dashed bg-card-bg border-divider">
+                        <div class="mx-auto h-12 w-12 mb-4 text-secondary-text">
+                            <mat-icon class="scale-150">inbox</mat-icon>
+                        </div>
+                        <h3 class="mt-2 text-sm font-medium text-primary-text">No content found</h3>
+                        <p class="mt-1 text-sm text-secondary-text">Get started by creating a new quiz chapter.</p>
+                    </div>
+                }
+            </main>
+
+            <!-- RIGHT COLUMN: Sidebar (Admin & Info) -->
+            @if(user?.role === 'SuperAdmin') {
+            <aside class="space-y-6">
+                @for(adminReq of adminReq; track adminReq._id){
+                <!-- Admin Requests Panel -->
+                <div class="pro-card rounded-xl p-0 overflow-hidden bg-card-bg border border-divider shadow-sm">
+                    <div class="px-5 py-4 flex items-center justify-between border-b bg-highlight/50 border-divider">
+                        <h3 class="text-sm font-bold uppercase tracking-wide text-primary-text">Admin Access Requests</h3>
+                        <span class="inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-primary-accent/10 text-primary-accent border border-primary-accent/20">
+                            Action Required
+                        </span>
+                    </div>
+
+                    <div class="divide-y divide-divider">
+                        <!-- Hardcoded Request Item -->
+                        <div class="p-5 transition-colors hover:bg-highlight/30">
+                            <div class="flex items-start justify-between">
+                                <div class="flex gap-3">
+                                    <div class="mt-1 h-8 w-8 flex-none rounded-full flex items-center justify-center bg-divider text-secondary-text">
+                                        <mat-icon style="font-size: 18px; width: 18px; height: 18px;">person</mat-icon>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-medium text-primary-text">{{adminReq.name}}</p>
+                                        <p class="text-xs text-secondary-text">{{adminReq.email}}</p>
+                                        <p class="text-xs mt-1 text-secondary-text opacity-70">Requested {{adminReq.createdAt}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex gap-3">
+                                <button (click)="approveAdminReq(adminReq._id)" class="flex-1 rounded-md px-2.5 py-1.5 text-xs font-semibold shadow-sm transition-opacity hover:opacity-90 bg-primary-accent text-button-text">
+                                    Approve
+                                </button>
+                                <button (click)="rejectAdminReq(adminReq._id)" class="rounded-md px-2.5 py-1.5 text-xs font-semibold shadow-sm transition-colors hover:bg-divider bg-transparent border border-divider text-primary-text">
+                                    Reject
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="px-5 py-3 text-center border-t border-divider bg-highlight/30">
+                        <button class="text-xs font-semibold hover:opacity-80 text-primary-accent">View all history</button>
+                    </div>
+                </div>
+
+                <!-- Helper Text / Info -->
+                <div class="rounded-lg p-4 border bg-highlight border-primary-accent/10">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <mat-icon style="font-size: 20px; width: 20px; height: 20px;" class="text-primary-accent">info</mat-icon>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-primary-text">Did you know?</h3>
+                            <div class="mt-2 text-sm text-secondary-text">
+                                <p>You can create quizzes directly from the topic view. Admins have full control over content management.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            </aside>
+        } 
+        </div>
+    </div>
+</div>

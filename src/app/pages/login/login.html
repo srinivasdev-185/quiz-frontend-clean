@@ -1,0 +1,138 @@
+<div class="min-h-screen w-full flex bg-white">
+    <!-- Left Side: Form Section -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 lg:p-16 animated-fade-in">
+        <div class="w-full max-w-md space-y-8">
+            <!-- Header -->
+            <div class="text-center relative">
+                <div class="mx-auto h-16 w-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-6 shadow-sm border border-blue-100">
+                    <mat-icon class="text-blue-600 transform scale-150">{{isRegisterMode ? 'person_add' : 'school'}}</mat-icon>
+                </div>
+                <h2 class="text-3xl font-bold tracking-tight text-gray-900">{{isRegisterMode ? 'Create Account' : 'Welcome back'}}</h2>
+                <p class="mt-2 text-base text-gray-500">{{isRegisterMode ? 'Start your journey with us.' : 'Please enter your details to sign in.'}}</p>
+            </div>
+
+            <form [formGroup]="loginForm" class="mt-8 space-y-6" autocomplete="off">
+                <div class="space-y-4">
+                    <!-- Name Fields (Register Mode Only) -->
+                    <!-- Name Fields (Register Mode Only) -->
+                    <div class="space-y-4" *ngIf="isRegisterMode">
+                        <div class="w-full">
+                            <mat-label>First Name</mat-label>
+                            <mat-form-field class="w-full custom-mat-field" appearance="outline">
+                                <mat-icon matPrefix class="text-gray-400 mr-2">badge</mat-icon>
+                                <input matInput formControlName="firstname" placeholder="John">
+                            </mat-form-field>
+                        </div>
+                        <div class="w-full">
+                            <mat-label>Last Name</mat-label>
+                            <mat-form-field class="w-full custom-mat-field" appearance="outline">
+                                <mat-icon matPrefix class="text-gray-400 mr-2">badge</mat-icon>
+                                <input matInput formControlName="lastname" placeholder="Doe">
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <!-- Username/Email Input -->
+                    <div class="relative">
+                        <mat-label>Username or Email</mat-label>
+                        <mat-form-field class="w-full custom-mat-field" appearance="outline">
+                            <mat-icon matPrefix class="text-gray-400 mr-2">person_outline</mat-icon>
+                            <input matInput formControlName="username" placeholder="name@example.com">
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Password Input -->
+                    <div class="relative">
+                        <mat-label>Password</mat-label>
+                        <mat-form-field class="w-full custom-mat-field" appearance="outline">
+                            <mat-icon matPrefix class="text-gray-400 mr-2">lock_outline</mat-icon>
+                            <input matInput [type]="hide ? 'password' : 'text'" formControlName="password">
+                            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" type="button">
+                                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Error Message Display (Login Mode Only) -->
+                    <div *ngIf="errorMessage && !isRegisterMode" class="rounded-lg bg-red-50 border border-red-200 p-4 animate-shake">
+                        <div class="flex items-start">
+                            <mat-icon class="text-red-500 mr-2 mt-0.5" style="font-size: 20px; width: 20px; height: 20px;">error_outline</mat-icon>
+                            <p class="text-sm text-red-700 font-medium">{{ errorMessage }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Admin Checkbox (Register Mode Only) -->
+                    <div class="flex items-center" *ngIf="isRegisterMode">
+                        <mat-checkbox formControlName="isAdmin" color="primary" class="text-sm text-gray-600">
+                            Register as Admin
+                        </mat-checkbox>
+                    </div>
+                </div>
+
+                <!-- Forgot Password Link (Login Only) -->
+                <div class="flex items-center justify-end" *ngIf="!isRegisterMode">
+                    <a href="#" class="text-sm font-medium text-blue-600 hover:text-blue-500 transition-colors">
+                        Forgot your password?
+                    </a>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="space-y-4">
+                    <button class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-lg shadow-blue-500/30 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:-translate-y-0.5" 
+                            (click)="submit()" type="button">
+                        {{isRegisterMode ? 'Sign up' : 'Sign in'}}
+                    </button>
+                    
+                    <div class="relative" *ngIf="!isRegisterMode">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-200"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-white text-gray-500">Or continue with</span>
+                        </div>
+                    </div>
+
+                    <button *ngIf="!isRegisterMode" class="w-full flex items-center justify-center gap-3 py-3 px-4 border border-gray-200 rounded-xl shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200"
+                            type="button">
+                        <img class="h-5 w-5" src="assets/microsoft.png" alt="Microsoft logo">
+                        <span>Sign in with Microsoft</span>
+                    </button>
+                </div>
+            </form>
+
+            <p class="mt-8 text-center text-sm text-gray-600">
+                {{isRegisterMode ? 'Already have an account?' : "Don't have an account?"}} 
+                <a class="font-semibold text-blue-600 hover:text-blue-500 transition-colors cursor-pointer" (click)="toggleMode()">
+                    {{isRegisterMode ? 'Sign in' : 'Sign up for free'}}
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Right Side: Decorative Section (Hidden on mobile) -->
+    <div class="hidden lg:flex w-1/2 relative bg-blue-600 overflow-hidden items-center justify-center">
+        <!-- Abstract Background -->
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-indigo-900 decorative-bg"></div>
+        <div class="absolute inset-0 bg-pattern opacity-10"></div>
+        
+        <!-- Content Overlay -->
+        <div class="relative z-10 text-center px-12 text-white max-w-lg animated-slide-in">
+            <h2 class="text-4xl font-bold mb-6 leading-tight">Learn faster, study better.</h2>
+            <p class="text-lg text-blue-100 mb-8">Unlock your potential with our advanced quiz platform designed to help you master any subject.</p>
+            
+            <!-- Floating Cards Decoration -->
+            <div class="relative h-64 w-full mt-8 perspective-container">
+                 <div class="floating-card glass-card p-4 rounded-xl absolute top-0 left-10 w-48 shadow-2xl animate-float-slow">
+                     <div class="h-2 w-12 bg-blue-200 rounded mb-2"></div>
+                     <div class="h-2 w-24 bg-white/20 rounded"></div>
+                 </div>
+                 <div class="floating-card glass-card p-4 rounded-xl absolute top-12 right-10 w-56 shadow-2xl animate-float-medium">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="h-8 w-8 rounded-full bg-green-400 flex items-center justify-center">✓</div>
+                        <div class="h-2 w-20 bg-white rounded"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
